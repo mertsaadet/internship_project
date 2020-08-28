@@ -2,3 +2,4 @@
 
 2020-Summer TÜBİTAK Internship Project
 
+Required database name: projectdb
