@@ -9,5 +9,5 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     Person findByTcKimlikNo(String tcKimlikNo);
 
     @Transactional
-    Person deletePersonByTcKimlikNo(String tcKimlikNo);
+    void deleteByTcKimlikNo(String tcKimlikNo);
 }
