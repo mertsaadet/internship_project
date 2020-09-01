@@ -11,39 +11,9 @@ import TableRow from '@material-ui/core/TableRow';
 import TableHeader from "./TableHeader";
 import TableContent from "./TableContent";
 
-const columns = [
-    { id: 'eventName', label: 'Event Name', minWidth: 170 },
-    { id: 'longitude', label: 'Longitude', minWidth: 100 },
-    {
-        id: 'latitude',
-        label: 'Latitude',
-        minWidth: 170,
-        align: 'right',
-    },
-    {
-        id: 'eventStartDate',
-        label: 'Event Start Date',
-        minWidth: 170,
-        align: 'right',
-    },
-    {
-        id: 'eventEndDate',
-        label: 'Event End Date',
-        minWidth: 170,
-        align: 'right',
-    },
-    {
-        id: 'quota',
-        label: 'Quota',
-        minWidth: 170,
-        align: 'right',
-    }
-];
 
 
 
-const rows = [
-];
 
 const useStyles = makeStyles({
     root: {
@@ -54,10 +24,14 @@ const useStyles = makeStyles({
     },
 });
 
-export default function PaginationTable() {
+export default function PaginationTable(props) {
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+
+
+
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -72,14 +46,14 @@ export default function PaginationTable() {
         <Paper className={classes.root}>
             <TableContainer className={classes.container}>
                 <Table stickyHeader aria-label="sticky table">
-                    <TableHeader columns={columns}/>
-                    <TableContent columns={columns} rows={rows} page={page} rowsPerPage={rowsPerPage}/>
+                    <TableHeader columns={props.columns}/>
+                    <TableContent columns={props.columns} rows={props.rows} page={page} rowsPerPage={rowsPerPage}/>
                 </Table>
             </TableContainer>
             <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={rows.length}
+                count={props.rows.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}
