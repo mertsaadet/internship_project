@@ -1,6 +1,7 @@
 package yte.intern.spring.application.usecases.manageevent.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import yte.intern.spring.application.usecases.common.MessageResponse;
 import yte.intern.spring.application.usecases.common.enums.MessageType;
@@ -8,11 +9,10 @@ import yte.intern.spring.application.usecases.manageevent.entity.Event;
 import yte.intern.spring.application.usecases.manageevent.repository.EventRepository;
 
 import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class ManageEventService {
-
+    @Autowired
     private final EventRepository eventRepository;
 
     public MessageResponse addEvent(Event event){

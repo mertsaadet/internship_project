@@ -9,7 +9,7 @@ import yte.intern.spring.application.usecases.manageperson.entity.Person;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2020-09-01T12:22:02+0300",
+    date = "2020-09-02T11:06:42+0300",
     comments = "version: 1.3.1.Final, compiler: javac, environment: Java 14.0.2 (Oracle Corporation)"
 )
 @Component
