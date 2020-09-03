@@ -16,14 +16,25 @@ public class ManageEventService {
     private final EventRepository eventRepository;
 
     public MessageResponse addEvent(Event event){
-        eventRepository.save(event);
-        return new MessageResponse("Successfully added event!", MessageType.SUCCESS);
+        Event eventFromDB = eventRepository.findByEventName(event.getEventName());
+        if(eventFromDB != null){
+
+            return new MessageResponse(String.format("There is an event with the name:%s",eventFromDB.getEventName()),MessageType.ERROR);}
+        else{
+            eventRepository.save(event);
+            return new MessageResponse(String.format("Added the event with the name:%s",event.getEventName()),MessageType.SUCCESS);
+        }
+
+
     }
 
     public List<Event> listAllEvents() { return eventRepository.findAll();   }
 
     public Event getEventByEventName(String eventName){
         return eventRepository.findByEventName(eventName);
+
+
+
     }
 
     public MessageResponse updateEvent(String eventName, Event event){
@@ -44,8 +55,14 @@ public class ManageEventService {
         }
     }
     public MessageResponse deleteEvent(String eventName){
+        Event eventFromDB = eventRepository.findByEventName(eventName);
+        if(eventFromDB != null){
         eventRepository.deleteByEventName(eventName);
-        return new MessageResponse(String.format("Deleted the event with the name:%s",eventName),MessageType.SUCCESS);
+        return new MessageResponse(String.format("Deleted the event with the name:%s",eventName),MessageType.SUCCESS);}
+        else{
+            return new MessageResponse(String.format("Can't find event with the name:%s",eventName),MessageType.ERROR);
+        }
+
     }
 }
 

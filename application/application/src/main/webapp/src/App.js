@@ -1,16 +1,20 @@
-    import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PaginationTable from "./components/table/PaginationTable";
 import axios from "axios";
 import {Button} from "@material-ui/core";
 import PlusIcon from '@material-ui/icons/Add';
 import AddButtonDialog from "./components/dialog/AddButtonDialog";
-    import DeleteEventDialog from "./components/dialog/DeleteEventDialog";
-    import UpdateEventDialog from "./components/dialog/UpdateEventDialog";
+import DeleteEventDialog from "./components/dialog/DeleteEventDialog";
+import UpdateEventDialog from "./components/dialog/UpdateEventDialog";
+import {toast, ToastContainer, Zoom} from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css"
+
 function App() {
 
     const tableColumns = [
-        { id: 'eventName', label: 'Event Name', minWidth: 170 },
-        { id: 'longitude', label: 'Longitude', minWidth: 100 },
+        {id: 'eventName', label: 'Event Name', minWidth: 170},
+        {id: 'longitude', label: 'Longitude', minWidth: 100},
         {
             id: 'latitude',
             label: 'Latitude',
@@ -47,10 +51,10 @@ function App() {
         {id: "quota", label: "Quota", type: "number"}
 
     ];
-    const deleteEventDialogField = [{id: "eventName", label:"Type the event you want to delete!", type: "text" }];
-    const updateEventDialogField = [{id: "eventName", label:"Type the event you want to edit!", type: "text" },
-        {id: "attribute", label:"Type the attribute you want to change", type: "text"},
-        {id: "value", label:"Type the value!", type: "text"}]
+    const deleteEventDialogField = [{id: "eventName", label: "Type the event you want to delete!", type: "text"}];
+    const updateEventDialogField = [{id: "eventName", label: "Type the event you want to edit!", type: "text"},
+        {id: "attribute", label: "Type the attribute you want to change", type: "text"},
+        {id: "value", label: "Type the value!", type: "text"}]
 
     const [tableRows, updateTableRows] = useState([]);
 
@@ -82,77 +86,103 @@ function App() {
             .then(response => {
                 updateTableRows(response.data);
             })
-    },[]);
-
+    }, []);
 
 
     const onEventAdd = (inputData) => {
-      console.log(inputData);
-       axios.post("/events", inputData).then( res => {console.log(res);});
+
+        axios.post("/events", inputData).then(res => {
+            if (res.data.messageType === "ERROR") {
+                toast.warning("Couldn't add the event! There already exists an event named: " + inputData.eventName + ". Please try with a different name!");
+            } else {
+
+                toast.success("Successfully added the event named " + inputData.eventName);
+
+
+            }
+
+
+        });
+
         handleClose();
     }
     const onEventDelete = (inputData) => {
 
-        axios.delete("/events/"+inputData.eventName).then(res => {console.log(res)});
+        axios.delete("/events/" + inputData.eventName).then(res => {
+            if (res.data.messageType === "ERROR") {
+                toast.error("Couldn't find an event named " + inputData.eventName + ". Please enter a valid name!");
+            } else {
+                toast.success("Deleted event:" + inputData.eventName + " successfully!");
+            }
+        });
+
         handleClose2();
     }
     const onEventUpdate = (inputData) => {
 
-        axios.get("/events/"+inputData.eventName).then(res => {
-            if(inputData.attribute === "longitude"){
+        axios.get("/events/" + inputData.eventName).then(res => {
+
+
+            if(typeof (res.data ) !== typeof("")){
+            if (inputData.attribute === "longitude") {
                 res.data.longitude = inputData.value;
-                axios.put("/events/"+inputData.eventName,res.data);
-            }
-            else if(inputData.attribute === "latitude"){
+
+            } else if (inputData.attribute === "latitude") {
                 res.data.latitude = inputData.value;
-                axios.put("/events/"+inputData.eventName,res.data);
-            }
-            else if(inputData.attribute === "eventStartDate"){
+
+            } else if (inputData.attribute === "eventStartDate") {
                 res.data.eventStartDate = inputData.value;
-                axios.put("/events/"+inputData.eventName,res.data);
-            }
-            else if(inputData.attribute === "eventEndDate"){
+
+            } else if (inputData.attribute === "eventEndDate") {
                 res.data.eventEndDate = inputData.value;
-                axios.put("/events/"+inputData.eventName,res.data);
-            }
-            else if(inputData.attribute === "quota"){
+
+            } else if (inputData.attribute === "quota") {
                 res.data.quota = inputData.value;
-                axios.put("/events/"+inputData.eventName,res.data);
+
             }
 
+                axios.put("/events/" + inputData.eventName, res.data);
+                toast.success("Updated event:" + inputData.eventName + " successfully!");
+            }
+            else{
+                toast.error("Couldn't find an event named " + inputData.eventName + ". Please enter a valid name!");
+            }
 
-            console.log(res)});
-
+        });
+        handleClose3();
     }
 
 
-  return (
-    <div className="App">
-        <Button variant="contained"
-                color="primary"
-                style={{float:"right"}}
-                onClick={handleClickOpen}
-                startIcon={<PlusIcon/>}>Add Event
-        </Button>
-        <Button variant="contained"
-                color="secondary"
-                style={{float:"right"}}
-                onClick={handleClickOpen2}
-                >Delete Event
-        </Button>
-        <Button variant="contained"
-                color="primary"
-                style={{float:"right"}}
-                onClick={handleClickOpen3}
-                >Update Event
-        </Button>
-        <UpdateEventDialog onSubmit={onEventUpdate} fields={updateEventDialogField} open={open3} handleClose={handleClose3}/>
-        <DeleteEventDialog onSubmit={onEventDelete} fields={deleteEventDialogField} open={open2} handleClose={handleClose2}/>
-        <AddButtonDialog onSubmit={onEventAdd} fields={addEventDialogFields} open={open} handleClose={handleClose}/>
-      <PaginationTable columns={tableColumns} rows={tableRows} />
+    return (
+        <div className="App">
+            <Button variant="contained"
+                    color="primary"
+                    style={{float: "middle"}}
+                    onClick={handleClickOpen}
+                    startIcon={<PlusIcon/>}>Add Event
+            </Button>
+            <Button variant="contained"
+                    color="secondary"
+                    style={{float: "middle"}}
+                    onClick={handleClickOpen2}
+            >Delete Event
+            </Button>
+            <Button variant="contained"
+                    color="primary"
+                    style={{float: "middle"}}
+                    onClick={handleClickOpen3}
+            >Update Event
+            </Button>
+            <UpdateEventDialog onSubmit={onEventUpdate} fields={updateEventDialogField} open={open3}
+                               handleClose={handleClose3}/>
+            <DeleteEventDialog onSubmit={onEventDelete} fields={deleteEventDialogField} open={open2}
+                               handleClose={handleClose2}/>
+            <AddButtonDialog onSubmit={onEventAdd} fields={addEventDialogFields} open={open} handleClose={handleClose}/>
+            <ToastContainer transition={Zoom} autoClose={7000}/>
+            <PaginationTable columns={tableColumns} rows={tableRows}/>
 
-    </div>
-  );
+        </div>
+    );
 }
 
 export default App;

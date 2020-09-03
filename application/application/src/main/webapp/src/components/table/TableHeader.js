@@ -1,7 +1,6 @@
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
-import Table from "@material-ui/core/Table";
 import React from "react";
 
 export default function TableHeader(props){

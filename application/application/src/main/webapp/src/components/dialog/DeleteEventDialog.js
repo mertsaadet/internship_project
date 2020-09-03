@@ -37,6 +37,7 @@ export default class DeleteEventDialog extends Component {
                             <TextField
                                 autoFocus
                                 margin="dense"
+                                key={field.id}
                                 id={field.id}
                                 label={field.label}
                                 type={field.type}
